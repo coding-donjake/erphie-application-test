@@ -4,8 +4,38 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc && cross-env NODE_ENV=development electron .",
+    "dev": "npm run build && cross-env NODE_ENV=development electron .",
     "start": "npm run build && cross-env NODE_ENV=production electron ."
+  },
+  "build": {
+    "appId": "com.erphie.test",
+    "productName": "Erphie Test Tool",
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "release"
+    },
+    "win": {
+      "target": {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Erphie Test Tool"
+    }
   },
   "devDependencies": {
     "@types/electron": "^1.4.38",
@@ -14,5 +44,8 @@
     "electron": "^37.2.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "playwright-core": "^1.54.2"
   }
 }
