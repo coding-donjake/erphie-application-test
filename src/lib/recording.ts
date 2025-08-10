@@ -1,4 +1,4 @@
-import { chromium, firefox, webkit, Browser } from "playwright-core";
+import { chromium, firefox, webkit, Browser } from "playwright";
 import * as path from "path";
 import * as fs from "fs";
 import { base64, utf8 } from "./content-type-encoding-list";
@@ -29,21 +29,13 @@ export const launchBrowser = async ({
   headless = false,
   args = [],
 }: RecordOptions): Promise<Browser> => {
-  const executablePath = getExecutablePath(preferredBrowser);
-
-  if (!executablePath || !fs.existsSync(executablePath)) {
-    throw new Error(
-      `Executable not found for ${preferredBrowser} at ${executablePath}`
-    );
-  }
-
   switch (preferredBrowser) {
     case "chromium":
-      return await chromium.launch({ executablePath, headless, args });
+      return await chromium.launch({ headless, args });
     case "firefox":
-      return await firefox.launch({ executablePath, headless, args });
+      return await firefox.launch({ headless, args });
     case "webkit":
-      return await webkit.launch({ executablePath, headless, args });
+      return await webkit.launch({ headless, args });
     default:
       throw new Error(`Unsupported preferred browser: ${preferredBrowser}`);
   }

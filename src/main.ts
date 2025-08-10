@@ -7,6 +7,7 @@ import {
   selectFolderDialog,
 } from "./lib/dialog";
 import { record } from "./lib/recording";
+import { isK6Installed, isNodeJSInstalled } from "./lib/checker";
 
 const isDev = !app.isPackaged && process.env.NODE_ENV !== "production";
 
@@ -34,6 +35,8 @@ const createWindow = () => {
   }
 };
 
+ipcMain.handle("is-k6-installed", isK6Installed);
+ipcMain.handle("is-nodejs-installed", isNodeJSInstalled);
 ipcMain.handle("record", record);
 ipcMain.handle("save-file", saveFileDialog);
 ipcMain.handle("save-folder", saveFolderDialog);
