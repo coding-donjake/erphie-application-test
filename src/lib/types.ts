@@ -46,6 +46,11 @@ export type Group = {
   entries: Entry[];
 };
 
+export type LogMessage = {
+  type: "info" | "success" | "warning" | "error" | "default";
+  message: string;
+};
+
 export type RecordOptions = {
   preferredBrowser?: "chromium" | "firefox" | "webkit";
   headless?: boolean;

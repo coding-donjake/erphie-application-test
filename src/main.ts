@@ -7,12 +7,18 @@ import {
   selectFolderDialog,
 } from "./lib/dialog";
 import { record } from "./lib/recording";
-import { isK6Installed, isNodeJSInstalled } from "./lib/checker";
+import {
+  isK6Installed,
+  isNodeJSInstalled,
+  isPlaywrightBrowserInstalled,
+} from "./lib/checker";
+import { sendLogMessage } from "./lib/log";
 
 const isDev = !app.isPackaged && process.env.NODE_ENV !== "production";
+export let mainWindow: BrowserWindow | null = null;
 
 const createWindow = () => {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     minWidth: 800,
@@ -25,18 +31,19 @@ const createWindow = () => {
     },
   });
 
-  win.maximize();
+  mainWindow.maximize();
 
   if (isDev) {
-    win.loadURL("http://localhost:5173");
+    mainWindow.loadURL("http://localhost:5173");
   } else {
     const indexPath = join(__dirname, "react/index.html");
-    win.loadFile(indexPath);
+    mainWindow.loadFile(indexPath);
   }
 };
 
 ipcMain.handle("is-k6-installed", isK6Installed);
 ipcMain.handle("is-nodejs-installed", isNodeJSInstalled);
+ipcMain.handle("is-playwright-browser-installed", isPlaywrightBrowserInstalled);
 ipcMain.handle("record", record);
 ipcMain.handle("save-file", saveFileDialog);
 ipcMain.handle("save-folder", saveFolderDialog);
