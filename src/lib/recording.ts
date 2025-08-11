@@ -4,6 +4,8 @@ import * as fs from "fs";
 import { base64, utf8 } from "./content-type-encoding-list";
 import { Entry, Group, RecordOptions, Script } from "./types";
 import { transactionLabel } from "./global-variables";
+import { sendLogMessage } from "./log";
+import { mainWindow } from "../main";
 
 const isPackaged = fs.existsSync(path.join(__dirname, "..", "browsers"));
 
@@ -29,16 +31,34 @@ export const launchBrowser = async ({
   headless = false,
   args = [],
 }: RecordOptions): Promise<Browser> => {
+  let browser = undefined;
+
   switch (preferredBrowser) {
     case "chromium":
-      return await chromium.launch({ headless, args });
+      browser = await chromium.launch({ headless, args });
+      break;
     case "firefox":
-      return await firefox.launch({ headless, args });
+      browser = await firefox.launch({ headless, args });
+      break;
     case "webkit":
-      return await webkit.launch({ headless, args });
+      browser = await webkit.launch({ headless, args });
+      break;
     default:
+      sendLogMessage(mainWindow, {
+        type: "error",
+        message: `Unsupported preferred browser: ${preferredBrowser}`,
+      });
       throw new Error(`Unsupported preferred browser: ${preferredBrowser}`);
   }
+
+  const browserName =
+    preferredBrowser.charAt(0).toUpperCase() + preferredBrowser.slice(1);
+  sendLogMessage(mainWindow, {
+    type: "success",
+    message: `${browserName} launched successfully!`,
+  });
+
+  return browser;
 };
 
 export const record = async (

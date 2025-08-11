@@ -2,6 +2,8 @@ import { contextBridge, ipcRenderer } from "electron";
 import { RecordOptions } from "./lib/types";
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  installPlaywrightBrowser: (browser: "chromium" | "firefox" | "webkit") =>
+    ipcRenderer.invoke("install-playwright-browser", browser),
   isK6Installed: () => ipcRenderer.invoke("is-k6-installed"),
   isNodeJSInstalled: () => ipcRenderer.invoke("is-nodejs-installed"),
   isPlaywrightBrowserInstalled: (browser: "chromium" | "firefox" | "webkit") =>

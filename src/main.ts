@@ -12,7 +12,7 @@ import {
   isNodeJSInstalled,
   isPlaywrightBrowserInstalled,
 } from "./lib/checker";
-import { sendLogMessage } from "./lib/log";
+import { installPlaywrightBrowser } from "./lib/install";
 
 const isDev = !app.isPackaged && process.env.NODE_ENV !== "production";
 export let mainWindow: BrowserWindow | null = null;
@@ -41,6 +41,7 @@ const createWindow = () => {
   }
 };
 
+ipcMain.handle("install-playwright-browser", installPlaywrightBrowser);
 ipcMain.handle("is-k6-installed", isK6Installed);
 ipcMain.handle("is-nodejs-installed", isNodeJSInstalled);
 ipcMain.handle("is-playwright-browser-installed", isPlaywrightBrowserInstalled);
