@@ -7,7 +7,6 @@ export const installPlaywrightBrowser = async (
   browser: "chromium" | "firefox" | "webkit"
 ): Promise<undefined> => {
   try {
-    console.log(`installing ${browser}`);
     execSync(`npx playwright install ${browser}`, { stdio: "inherit" });
   } catch (error) {
     throw new Error(`Failed to install Playwright browser "${browser}".`);

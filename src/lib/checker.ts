@@ -1,7 +1,5 @@
 import { execSync } from "child_process";
 import fs from "fs";
-import path from "path";
-import os from "os";
 import { sendLogMessage } from "./log";
 import { mainWindow } from "../main";
 
@@ -34,34 +32,12 @@ export const isNodeJSInstalled = async (): Promise<boolean> => {
 export const isPlaywrightBrowserInstalled = async (
   _event: Electron.IpcMainInvokeEvent,
   browser: "chromium" | "firefox" | "webkit"
-) => {
-  const localPath = path.join(
-    process.cwd(),
-    "node_modules",
-    ".cache",
-    "ms-playwright",
-    browser
-  );
-  const globalPath = path.join(
-    os.homedir(),
-    ".cache",
-    "ms-playwright",
-    browser
-  );
-
-  const browserName = browser.charAt(0).toUpperCase() + browser.slice(1);
-
-  if (fs.existsSync(localPath) || fs.existsSync(globalPath)) {
-    sendLogMessage(mainWindow, {
-      type: "success",
-      message: `${browserName} is installed.`,
-    });
-    return true;
-  } else {
-    sendLogMessage(mainWindow, {
-      type: "warning",
-      message: `${browserName} is not installed.`,
-    });
+): Promise<boolean> => {
+  try {
+    const executablePath = require("playwright").executablePath(browser);
+    if (fs.existsSync(executablePath)) return true;
+    else return false;
+  } catch (error) {
     return false;
   }
 };
